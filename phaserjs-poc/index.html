@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Gobblins POC</title>
+        <script src="./node_modules/phaser/build/phaser.min.js"></script>
+    </head>
+    <body>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+        //  Note that this html file is set to pull down Phaser 2.5.0 from the JS Delivr CDN.
+        //  Although it will work fine with this tutorial, it's almost certainly not the most current version.
+        //  Be sure to replace it with an updated version before you start experimenting with adding your own code.
+
+        var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
+
+        function preload () {
+          game.load.spritesheet('cat', 'assets/sprites/cat.png', 64, 64);
+        }
+
+        function create () {
+          game.back_layer = game.add.group();
+          game.mid_layer = game.add.group();
+          game.front_layer = game.add.group();
+          game.stage.backgroundColor = '#87CEEB';
+          loadInputs();
+          loadLetters();
+          loadGobblins();
+        }
+
+        function loadInputs() {
+
+        }
+
+        function loadLetters() {
+          var bmd = game.add.bitmapData(30, 53, 'key');
+          bmd.text("b", 0, 50, '50px Courier', 'rgb(255, 255, 255)');
+
+          var sprite = game.front_layer.create(game.world.centerX, game.world.centerY, bmd);
+          sprite.position.set(game.width * 0.5, game.height * 0.5);
+          sprite.anchor.set(0.5, 0.5);
+          sprite.inputEnabled = true;
+          sprite.input.enableDrag();
+
+          sprite.events.onInputOver.add(function(){
+            game.canvas.style.cursor = "move";
+          }, this);
+
+          sprite.events.onInputOut.add(function(){
+            game.canvas.style.cursor = "default";
+          }, this);
+        }
+
+        function loadGobblins() {
+          var sprite = game.mid_layer.create(200, 200, 'cat');
+          sprite.hitArea = new Phaser.Rectangle(20, 20, 24, 34);
+          sprite.animations.add('idle', [0, 1, 2, 3], 10, true);
+          sprite.animations.add('walk', [16, 17, 18, 19, 20, 21, 22, 23], 10, true);
+          sprite.animations.add('die', [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70], 10, false);
+          sprite.animations.add('punch', [96, 97, 98, 99, 100, 101], 10, true);
+          sprite.scale.set(4);
+          sprite.smoothed = false;
+          sprite.inputEnabled = true;
+          sprite.input.useHandCursor = true;
+          sprite.animations.play('idle');
+        }
+
+        function talk() {
+          sprite.animations.play('punch');
+        }
+
+        function die() {
+          sprite.animations.play('die');
+        }
+
+        function idle() {
+          sprite.animations.play('idle');
+        }
+    };
+
+    </script>
+
+    </body>
+</html>
