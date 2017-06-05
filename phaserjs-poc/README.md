@@ -12,5 +12,5 @@ npm install
 http-server -c-1
 
 # Load browser
-open http://192.168.0.4:8080/
+open http://127.0.0.1:8080/
 ```
